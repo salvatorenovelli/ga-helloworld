@@ -3,12 +3,15 @@ package com.fun;
 
 import java.util.Random;
 
+import static com.fun.GeneticHelloWorld.TARGET;
+
+
 public class Chromosome implements Comparable<Chromosome> {
 	private final String gene;
 	private final int fitness;
 	
 	/** The target gene, converted to an array for convenience. */
-	private static final char[] TARGET_GENE = "Hello, world! I'm alive!".toCharArray();
+	private static final char[] TARGET_GENE = TARGET.toCharArray();
 
 	/** Convenience randomizer. */
 	private static final Random rand = new Random(System.currentTimeMillis());
