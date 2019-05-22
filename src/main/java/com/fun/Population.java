@@ -20,7 +20,7 @@ public class Population {
     private double elitism;
     private double mutation;
     private double crossover;
-    private Individual[] popArr;
+    private Individual[] currentPopulation;
 
 
     public Population(double crossoverRatio, double elitismRatio, double mutationRatio) {
@@ -30,12 +30,12 @@ public class Population {
         this.mutation = mutationRatio;
 
         // Generate an initial population
-        this.popArr = new Individual[POPULATION_SIZE];
+        this.currentPopulation = new Individual[POPULATION_SIZE];
         for (int i = 0; i < POPULATION_SIZE; i++) {
-            this.popArr[i] = Individual.generateRandom();
+            this.currentPopulation[i] = Individual.generateRandom();
         }
 
-        Arrays.sort(this.popArr);
+        Arrays.sort(this.currentPopulation);
     }
 
     public Population() {
@@ -47,15 +47,14 @@ public class Population {
      */
     public void evolve() {
         // Create a buffer for the new generation
-        Individual[] buffer = new Individual[popArr.length];
+        Individual[] buffer = new Individual[currentPopulation.length];
 
         // Copy over a portion of the population unchanged, based on
         // the elitism ratio.
-        int idx = (int) Math.round(popArr.length * elitism);
-        System.arraycopy(popArr, 0, buffer, 0, idx);
+        int idx = (int) Math.round(currentPopulation.length * elitism);
+        System.arraycopy(currentPopulation, 0, buffer, 0, idx);
 
-        // Iterate over the remainder of the population and evolve as
-        // appropriate.
+        // Iterate over the remainder of the population and evolve as appropriate.
         while (idx < buffer.length) {
             // Check to see if we should perform a crossover.
             if (rand.nextFloat() <= crossover) {
@@ -82,9 +81,9 @@ public class Population {
             } else { // No crossover, so copy verbatium.
                 // Determine if mutation should occur.
                 if (rand.nextFloat() <= mutation) {
-                    buffer[idx] = popArr[idx].mutate();
+                    buffer[idx] = currentPopulation[idx].mutate();
                 } else {
-                    buffer[idx] = popArr[idx];
+                    buffer[idx] = currentPopulation[idx];
                 }
             }
 
@@ -96,7 +95,7 @@ public class Population {
         Arrays.sort(buffer);
 
         // Reset the population
-        popArr = buffer;
+        currentPopulation = buffer;
     }
 
     private Individual[] selectParents() {
@@ -104,11 +103,11 @@ public class Population {
 
         // Randomly select two parents via tournament selection.
         for (int i = 0; i < 2; i++) {
-            parents[i] = popArr[rand.nextInt(popArr.length)];
+            parents[i] = currentPopulation[rand.nextInt(currentPopulation.length)];
             for (int j = 0; j < TOURNAMENT_SIZE; j++) {
-                int idx = rand.nextInt(popArr.length);
-                if (popArr[idx].compareTo(parents[i]) < 0) {
-                    parents[i] = popArr[idx];
+                int idx = rand.nextInt(currentPopulation.length);
+                if (currentPopulation[idx].compareTo(parents[i]) < 0) {
+                    parents[i] = currentPopulation[idx];
                 }
             }
         }
@@ -117,6 +116,6 @@ public class Population {
     }
 
     public Individual getFittest() {
-        return this.popArr[0];
+        return this.currentPopulation[0];
     }
 }

@@ -17,7 +17,7 @@ public class GeneticHelloWorld {
         Individual fittest = population.getFittest();
 
         while (!fittest.isPerfectFitness()) {
-            System.out.println("Generation " + generationNumber++ + " fittest is: " + fittest);
+            System.out.println("Generation " + generationNumber++ + ": " + fittest);
             population.evolve();
             fittest = population.getFittest();
         }
