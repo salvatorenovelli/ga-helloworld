@@ -5,34 +5,27 @@ package com.fun;
 public class GeneticHelloWorld {
 
 
+    private static int generationNumber = 0;
     public static final String TARGET = "Yes";
 
     public static void main(String[] args) {
 
-        double crossoverRatio = 0.8;
-        double elitismRatio = 0.1;
-        double mutationRatio = 0.03;
-
         long startTime = System.currentTimeMillis();
 
-        // Create the initial population
-        Population pop = new Population(crossoverRatio, elitismRatio, mutationRatio);
+        Population population = new Population();
 
-        Chromosome best = pop.getBest();
+        Individual fittest = population.getFittest();
 
-        int generations = 0;
-
-        while (!best.perfectFitness()) {
-            System.out.println("Generation " + generations++ + ": " + best.getGene());
-            pop.evolve();
-            best = pop.getBest();
+        while (!fittest.isPerfectFitness()) {
+            System.out.println("Generation " + generationNumber++ + " fittest is: " + fittest);
+            population.evolve();
+            fittest = population.getFittest();
         }
 
-        // Get the end time for the simulation.
         long endTime = System.currentTimeMillis();
 
         // Print out some information to the console.
-        System.out.println("Generation " + generations + ": " + best.getGene());
+        System.out.println("Generation " + generationNumber + ": " + fittest);
         System.out.println("Total execution time: " + (endTime - startTime) + "ms");
     }
 

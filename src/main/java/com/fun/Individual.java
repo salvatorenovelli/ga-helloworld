@@ -6,7 +6,7 @@ import java.util.Random;
 import static com.fun.GeneticHelloWorld.TARGET;
 
 
-public class Chromosome implements Comparable<Chromosome> {
+public class Individual implements Comparable<Individual> {
 	private final String gene;
 	private final int fitness;
 	
@@ -19,28 +19,20 @@ public class Chromosome implements Comparable<Chromosome> {
 	/**
 	 * Default constructor.
 	 *
-	 * @param gene The gene representing this <code>Chromosome</code>.
+	 * @param gene The gene representing this <code>Individual</code>.
 	 */
-	public Chromosome(String gene) {
+	public Individual(String gene) {
 		this.gene    = gene;
 		this.fitness = calculateFitness(gene);
 	}
+
 	
 	/**
-	 * Method to retrieve the gene for this <code>Chromosome</code>.
-	 *
-	 * @return The gene for this <code>Chromosome</code>.
-	 */
-	public String getGene() {
-		return gene;
-	}
-	
-	/**
-	 * Method to retrieve the fitness of this <code>Chromosome</code>.  Note
-	 * that a lower fitness indicates a better <code>Chromosome</code> for the
+	 * Method to retrieve the fitness of this <code>Individual</code>.  Note
+	 * that a lower fitness indicates a better <code>Individual</code> for the
 	 * solution.
 	 *
-	 * @return The fitness of this <code>Chromosome</code>.
+	 * @return The fitness of this <code>Individual</code>.
 	 */
 	public int getFitness() {
 		return fitness;
@@ -66,33 +58,33 @@ public class Chromosome implements Comparable<Chromosome> {
 	}
 
 	/**
-	 * Method to generate a new <code>Chromosome</code> that is a random
-	 * mutation of this <code>Chromosome</code>.  This method randomly
-	 * selects one character in the <code>Chromosome</code>s gene, then
+	 * Method to generate a new <code>Individual</code> that is a random
+	 * mutation of this <code>Individual</code>.  This method randomly
+	 * selects one character in the <code>Individual</code>s gene, then
 	 * replaces it with another random (but valid) character.  Note that
-	 * this method returns a new <code>Chromosome</code>, it does not
-	 * modify the existing <code>Chromosome</code>.
+	 * this method returns a new <code>Individual</code>, it does not
+	 * modify the existing <code>Individual</code>.
 	 * 
-	 * @return A mutated version of this <code>Chromosome</code>.
+	 * @return A mutated version of this <code>Individual</code>.
 	 */
-	public Chromosome mutate() {
+	public Individual mutate() {
 		char[] arr  = gene.toCharArray();
 		int idx     = rand.nextInt(arr.length);
 		int delta   = (rand.nextInt() % 90) + 32;
 		arr[idx]    = (char) ((arr[idx] + delta) % 122);
 
-		return new Chromosome(String.valueOf(arr));
+		return new Individual(String.valueOf(arr));
 	}
 
 	/**
-	 * Method used to mate this <code>Chromosome</code> with another.  The
-	 * resulting child <code>Chromosome</code>s are returned.
+	 * Method used to mate this <code>Individual</code> with another.  The
+	 * resulting child <code>Individual</code>s are returned.
 	 * 
-	 * @param mate The <code>Chromosome</code> to mate with.
+	 * @param mate The <code>Individual</code> to mate with.
 	 * 
-	 * @return The resulting <code>Chromosome</code> children.
+	 * @return The resulting <code>Individual</code> children.
 	 */
-	public Chromosome[] mate(Chromosome mate) {
+	public Individual[] mate(Individual mate) {
 		// Convert the genes to arrays to make thing easier.
 		char[] arr1  = gene.toCharArray();
 		char[] arr2  = mate.gene.toCharArray();
@@ -112,19 +104,19 @@ public class Chromosome implements Comparable<Chromosome> {
 		System.arraycopy(arr2, 0, child2, 0, pivot);
 		System.arraycopy(arr1, pivot, child2, pivot, (child2.length - pivot));
 
-		return new Chromosome[] { new Chromosome(String.valueOf(child1)), 
-				new Chromosome(String.valueOf(child2))}; 
+		return new Individual[] { new Individual(String.valueOf(child1)),
+				new Individual(String.valueOf(child2))};
 	}
-	static Chromosome generateRandom() {
+	static Individual generateRandom() {
 		char[] arr = new char[TARGET_GENE.length];
 		for (int i = 0; i < arr.length; i++) {
 			arr[i] = (char) (rand.nextInt(90) + 32);
 		}
 
-		return new Chromosome(String.valueOf(arr));
+		return new Individual(String.valueOf(arr));
 	}
 
-	public int compareTo(Chromosome c) {
+	public int compareTo(Individual c) {
 		if (fitness < c.fitness) {
 			return -1;
 		} else if (fitness > c.fitness) {
@@ -136,11 +128,11 @@ public class Chromosome implements Comparable<Chromosome> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (!(o instanceof Chromosome)) {
+		if (!(o instanceof Individual)) {
 			return false;
 		}
 		
-		Chromosome c = (Chromosome) o;
+		Individual c = (Individual) o;
 		return (gene.equals(c.gene) && fitness == c.fitness);
 	}
 
@@ -150,7 +142,11 @@ public class Chromosome implements Comparable<Chromosome> {
 				.toString().hashCode();
 	}
 
-	public boolean perfectFitness() {
+	public boolean isPerfectFitness() {
 		return getFitness() == 0;
+	}
+
+	public String toString(){
+		return gene;
 	}
 }
