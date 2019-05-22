@@ -6,22 +6,19 @@ import java.util.Random;
 
 public class Population {
 
-    /**
-     * The size of the tournament.
-     */
     private static final int TOURNAMENT_SIZE = 3;
     public static final int POPULATION_SIZE = 2048;
 
-    /**
-     * Convenience randomizer.
-     */
-    private static final Random rand = new Random(0);
+    private final Random rand = new Random(0);
 
     private double elitism;
     private double mutation;
     private double crossover;
     private Individual[] currentPopulation;
 
+    public Population() {
+        this(0.8, 0.1, 0.1);
+    }
 
     public Population(double crossoverRatio, double elitismRatio, double mutationRatio) {
 
@@ -38,13 +35,6 @@ public class Population {
         Arrays.sort(this.currentPopulation);
     }
 
-    public Population() {
-        this(0.8, 0.1, 0.03);
-    }
-
-    /**
-     * Method used to evolve the population.
-     */
     public void evolve() {
         // Create a buffer for the new generation
         Individual[] buffer = new Individual[currentPopulation.length];
@@ -57,14 +47,14 @@ public class Population {
         // Iterate over the remainder of the population and evolve as appropriate.
         while (idx < buffer.length) {
             // Check to see if we should perform a crossover.
-            if (rand.nextFloat() <= crossover) {
+            if (shouldCrossover()) {
 
                 // Select the parents and mate to get their children
                 Individual[] parents = selectParents();
                 Individual[] children = parents[0].mate(parents[1]);
 
                 // Check to see if the first child should be mutated.
-                if (rand.nextFloat() <= mutation) {
+                if (shouldMutate()) {
                     buffer[idx++] = children[0].mutate();
                 } else {
                     buffer[idx++] = children[0];
@@ -72,15 +62,14 @@ public class Population {
 
                 // Repeat for the second child, if there is room.
                 if (idx < buffer.length) {
-                    if (rand.nextFloat() <= mutation) {
+                    if (shouldMutate()) {
                         buffer[idx] = children[1].mutate();
                     } else {
                         buffer[idx] = children[1];
                     }
                 }
-            } else { // No crossover, so copy verbatium.
-                // Determine if mutation should occur.
-                if (rand.nextFloat() <= mutation) {
+            } else {
+                if (shouldMutate()) {
                     buffer[idx] = currentPopulation[idx].mutate();
                 } else {
                     buffer[idx] = currentPopulation[idx];
@@ -98,21 +87,35 @@ public class Population {
         currentPopulation = buffer;
     }
 
+    private boolean shouldMutate() {
+        return rand.nextFloat() <= mutation;
+    }
+
+    private boolean shouldCrossover() {
+        return rand.nextFloat() <= crossover;
+    }
+
     private Individual[] selectParents() {
         Individual[] parents = new Individual[2];
 
-        // Randomly select two parents via tournament selection.
+        // Randomly select two best parents out of 4 random individuals
+        // polygamy is allowed also, you could mate with yourself here
+
         for (int i = 0; i < 2; i++) {
-            parents[i] = currentPopulation[rand.nextInt(currentPopulation.length)];
+            parents[i] = getRandomIndividual();
             for (int j = 0; j < TOURNAMENT_SIZE; j++) {
-                int idx = rand.nextInt(currentPopulation.length);
-                if (currentPopulation[idx].compareTo(parents[i]) < 0) {
-                    parents[i] = currentPopulation[idx];
+                Individual randomIndividual = getRandomIndividual();
+                if (randomIndividual.compareTo(parents[i]) < 0) {
+                    parents[i] = randomIndividual;
                 }
             }
         }
 
         return parents;
+    }
+
+    private Individual getRandomIndividual() {
+        return currentPopulation[rand.nextInt(currentPopulation.length)];
     }
 
     public Individual getFittest() {
