@@ -115,13 +115,7 @@ public class Chromosome implements Comparable<Chromosome> {
 		return new Chromosome[] { new Chromosome(String.valueOf(child1)), 
 				new Chromosome(String.valueOf(child2))}; 
 	}
-	
-	/**
-	 * A convenience method to generate a randome <code>Chromosome</code>.
-	 * 
-	 * @return A randomly generated <code>Chromosome</code>.
-	 */
-	/* package */ static Chromosome generateRandom() {
+	static Chromosome generateRandom() {
 		char[] arr = new char[TARGET_GENE.length];
 		for (int i = 0; i < arr.length; i++) {
 			arr[i] = (char) (rand.nextInt(90) + 32);
@@ -130,12 +124,6 @@ public class Chromosome implements Comparable<Chromosome> {
 		return new Chromosome(String.valueOf(arr));
 	}
 
-	/**
-	 * Method to allow for comparing <code>Chromosome</code> objects with
-	 * one another based on fitness.  <code>Chromosome</code> ordering is 
-	 * based on the natural ordering of the fitnesses of the
-	 * <code>Chromosome</code>s.  
-	 */
 	public int compareTo(Chromosome c) {
 		if (fitness < c.fitness) {
 			return -1;
@@ -145,10 +133,7 @@ public class Chromosome implements Comparable<Chromosome> {
 		
 		return 0;
 	}
-	
-	/**
-	 * @see Object#equals(Object)
-	 */
+
 	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof Chromosome)) {
@@ -158,13 +143,14 @@ public class Chromosome implements Comparable<Chromosome> {
 		Chromosome c = (Chromosome) o;
 		return (gene.equals(c.gene) && fitness == c.fitness);
 	}
-	
-	/**
-	 * @see Object#hashCode()
-	 */
+
 	@Override
 	public int hashCode() {		
 		return new StringBuilder().append(gene).append(fitness)
 				.toString().hashCode();
+	}
+
+	public boolean perfectFitness() {
+		return getFitness() == 0;
 	}
 }
