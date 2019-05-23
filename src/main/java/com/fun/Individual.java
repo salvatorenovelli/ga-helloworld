@@ -3,13 +3,13 @@ package com.fun;
 
 import java.util.Random;
 
-import static com.fun.GeneticHelloWorld.TARGET;
+import static com.fun.GeneticHelloWorld.PERFECT_FITNESS;
 
 
 public class Individual implements Comparable<Individual> {
     private final String gene;
     private final int fitness;
-    private static final char[] TARGET_GENE = TARGET.toCharArray();
+    private static final char[] TARGET_GENE = PERFECT_FITNESS.toCharArray();
     private static final Random rand = new Random(0);
 
     public Individual(String gene) {

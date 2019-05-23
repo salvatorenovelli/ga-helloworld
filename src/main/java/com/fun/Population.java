@@ -121,4 +121,8 @@ public class Population {
     public Individual getFittest() {
         return this.currentPopulation[0];
     }
+
+    public boolean isPerfectFitness() {
+        return getFittest().isPerfectFitness();
+    }
 }

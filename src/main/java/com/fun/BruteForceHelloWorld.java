@@ -2,7 +2,7 @@ package com.fun;
 
 import java.util.Random;
 
-import static com.fun.GeneticHelloWorld.TARGET;
+import static com.fun.GeneticHelloWorld.PERFECT_FITNESS;
 
 public class BruteForceHelloWorld {
 
@@ -10,11 +10,11 @@ public class BruteForceHelloWorld {
 
     public static void main(String[] args) {
 
-        int length = TARGET.length();
+        int length = PERFECT_FITNESS.length();
         String attempt = "";
         int i = 0;
 
-        while (!attempt.equals(TARGET)) {
+        while (!attempt.equals(PERFECT_FITNESS)) {
             attempt = generateRandomString(length);
             System.out.println("Attempt " + i++ + ": " + attempt);
         }
